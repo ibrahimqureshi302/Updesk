@@ -1,0 +1,103 @@
+# ── UpDesk — full stack ───────────────────────────────────────────────────────
+# One command brings up the whole project:
+#     docker compose up -d --build
+#
+# Services:
+#   db            PostgreSQL (internal only)
+#   redis         Redis      (internal only)
+#   evolution-api WhatsApp gateway (Evolution API)  → http://localhost:8080
+#   backend       Django REST API                    → http://localhost:8000
+#   frontend      React build served by Nginx        → http://localhost:3000
+# ──────────────────────────────────────────────────────────────────────────────
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB:       ${DB_NAME:-updesk_db}
+      POSTGRES_USER:     ${DB_USER:-updesk_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-abcd1234}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-updesk_user} -d ${DB_NAME:-updesk_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  evolution-api:
+    image: atendai/evolution-api:v1.8.2
+    restart: unless-stopped
+    environment:
+      AUTHENTICATION_TYPE:                       apikey
+      AUTHENTICATION_API_KEY:                    ${EVOLUTION_API_KEY:-updesk-evolution-key}
+      AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES:  "true"
+      SERVER_URL:                                http://localhost:8080
+      CORS_ORIGIN:                               "*"
+      DEL_INSTANCE:                              "false"
+      DATABASE_ENABLED:                          "false"
+      CACHE_REDIS_ENABLED:                       "false"
+      CACHE_LOCAL_ENABLED:                       "true"
+      CONFIG_SESSION_PHONE_CLIENT:               UpDesk
+      CONFIG_SESSION_PHONE_NAME:                 Chrome
+      QRCODE_LIMIT:                              "30"
+    volumes:
+      - evolution_instances:/evolution/instances
+      - evolution_store:/evolution/store
+    ports:
+      - "8080:8080"
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      # docker-network overrides (take precedence over values in .env)
+      DJANGO_DEBUG:         "True"
+      DJANGO_ALLOWED_HOSTS: "*"
+      DB_HOST:              db
+      DB_PORT:              "5432"
+      REDIS_URL:            redis://redis:6379/0
+      CELERY_EAGER:         "True"
+      EVOLUTION_API_URL:    http://evolution-api:8080
+      EVOLUTION_API_KEY:    ${EVOLUTION_API_KEY:-updesk-evolution-key}
+      EVOLUTION_INSTANCE:   updesk
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      evolution-api:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8000/api/v1
+        VITE_WS_URL:  ws://localhost:8000/ws
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  redisdata:
+  evolution_instances:
+  evolution_store:
