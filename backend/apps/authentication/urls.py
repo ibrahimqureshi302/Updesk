@@ -13,3 +13,4 @@ urlpatterns = [
     path("upwork/callback/", UpworkCallbackView.as_view(),   name="upwork-callback"),
     path("upwork/status/",   UpworkStatusView.as_view(),     name="upwork-status"),
 ]
+

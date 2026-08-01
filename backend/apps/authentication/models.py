@@ -16,6 +16,7 @@ def _fernet():
     key = base64.urlsafe_b64encode(settings.SECRET_KEY.encode()[:32].ljust(32, b"0"))
     return Fernet(key)
 
+
 class UpworkToken(models.Model):
     user          = models.OneToOneField(User, on_delete=models.CASCADE, related_name="upwork_token")
     _access_token  = models.TextField(db_column="access_token")

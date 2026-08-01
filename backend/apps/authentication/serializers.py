@@ -13,7 +13,6 @@ class RegisterSerializer(serializers.Serializer):
             raise serializers.ValidationError("This username is already taken.")
         return value
 
-
 class TokenResponseSerializer(serializers.Serializer):
     access  = serializers.CharField()
     refresh = serializers.CharField()

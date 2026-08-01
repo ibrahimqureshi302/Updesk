@@ -11,7 +11,6 @@ from .models import UpworkToken
 AUTH_URL  = "https://www.upwork.com/ab/account-security/oauth2/authorize"
 TOKEN_URL = "https://www.upwork.com/api/v3/oauth2/token"
 
-
 def build_auth_url(state: str) -> str:
     return (
         f"{AUTH_URL}"

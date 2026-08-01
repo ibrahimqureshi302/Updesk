@@ -6,7 +6,6 @@ from .models import Client
 
 logger = logging.getLogger(__name__)
 
-
 def sync_clients(user) -> int:
     data      = UpworkClient(user).query(QUERY)
     contracts = data.get("contracts", [])
