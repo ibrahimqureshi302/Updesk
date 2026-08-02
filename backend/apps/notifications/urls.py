@@ -12,3 +12,5 @@ urlpatterns = [
     path("whatsapp-status/",    WhatsAppStatusView.as_view(),     name="whatsapp-status"),
     path("whatsapp-test/",      WhatsAppTestView.as_view(),       name="whatsapp-test"),
 ]
+
+

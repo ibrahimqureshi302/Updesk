@@ -16,7 +16,6 @@ class NotificationListView(APIView):
             "unread_count": unread_count,
         })
 
-
 class MarkAllReadView(APIView):
     """POST  /notifications/mark-read/  — mark every notification as read."""
 

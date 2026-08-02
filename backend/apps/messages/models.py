@@ -28,3 +28,5 @@ class Message(models.Model):
     class Meta:
         db_table = "messages"
         ordering = ["sent_at"]
+
+        

@@ -8,7 +8,6 @@ class NotificationSerializer(serializers.ModelSerializer):
         fields = ["id", "ntype", "title", "body", "read", "created_at"]
         read_only_fields = ["id", "ntype", "title", "body", "created_at"]
 
-
 class WhatsAppSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model  = WhatsAppSettings

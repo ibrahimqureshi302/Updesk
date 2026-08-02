@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from .models import MessageThread
 from .serializers import ThreadSerializer, UpworkLinkSerializer
 
-
 class ThreadListView(generics.ListAPIView):
     """
     GET /api/v1/messages/
@@ -69,3 +68,5 @@ class OpenInUpworkView(APIView):
                 {"error": "Thread not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+        

@@ -27,3 +27,5 @@ class UpworkLinkSerializer(serializers.Serializer):
     upwork_url = serializers.URLField(
         help_text="Open this URL in your browser to view the conversation on Upwork."
     )
+
+    
