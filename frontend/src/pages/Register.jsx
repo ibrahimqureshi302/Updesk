@@ -19,9 +19,9 @@ function BrandMark() {
       <rect x="1" y="2" width="7" height="26" rx="3.5" fill="#fff" />
       <path d="M4.5 28 Q4.5 40 16 40 Q27.5 40 27.5 28" fill="none" stroke="#fff" strokeWidth="7" strokeLinecap="round" />
       <rect x="24" y="14" width="7" height="16" rx="3.5" fill="#fff" />
-      <path d="M21 14 L27.5 2 L34 14Z" fill="#D9F99D" />
+      <path d="M21 14 L27.5 2 L34 14Z" fill="#C4B5FD" />
       <text x="44" y="30" fontFamily="Inter,system-ui,sans-serif" fontSize="24" fontWeight="800" fill="#fff">Up</text>
-      <text x="76" y="30" fontFamily="Inter,system-ui,sans-serif" fontSize="24" fontWeight="800" fill="#D9F99D">Desk</text>
+      <text x="76" y="30" fontFamily="Inter,system-ui,sans-serif" fontSize="24" fontWeight="800" fill="#C4B5FD">Desk</text>
     </svg>
   )
 }
